@@ -1,0 +1,5 @@
+{
+    "connectionDatabase": "mongodb://admin:admin@ds129926.mlab.com:29926/mydict",
+    "backupDatabase" : "mongodb://admin:admin@ds135156.mlab.com:35156/mydict-backup",
+    "port": "6969"
+}
