@@ -106,7 +106,7 @@ class Entry extends Component {
                 onClick={this.handleEditButton.bind(this)}
                 >
                 </Button>
-                <Modal dimmer = 'default' size = 'tiny' trigger = {
+                <Modal size = 'tiny' trigger = {
                   <Button circular={true} floated='right' active={false} icon={
                     <Icon className='trash icon'>
                     </Icon>
@@ -119,8 +119,11 @@ class Entry extends Component {
                   >
                     <Modal.Header>Xác nhận xóa?</Modal.Header>
                     <Modal.Content>
-                      <Button type='submit' color='red' floated = 'right' onClick = {this.handleDeleteSubmitButton.bind(this)}>Xóa</Button>
-                      <Button type='submit' onClick = {this.handleDeleteCancelButton.bind(this)}>Cancel</Button>
+                      <Button.Group fluid>
+                        <Button type='submit' onClick = {this.handleDeleteCancelButton.bind(this)}>Cancel</Button>
+                        <Button.Or />
+                        <Button type='submit' color='red' onClick = {this.handleDeleteSubmitButton.bind(this)}>Xóa</Button>
+                      </Button.Group>
                     </Modal.Content>
                 </Modal>
             </Card.Header>
@@ -150,8 +153,11 @@ class Entry extends Component {
                 <label>Definition</label>
                 <input ref="definition" placeholder='Enter definition' defaultValue={JSON.stringify(this.props.data.definition)}/>
               </Form.Field>
-              <Button type='submit' floated = 'right' color = 'blue' onClick = {this.handleEditSubmitButton.bind(this)}>Submit</Button>
-              <Button type='submit' onClick = {this.handleEditCancelButton.bind(this)}>Cancel</Button>
+              <Button.Group fluid>
+                <Button type='submit' onClick = {this.handleEditCancelButton.bind(this)}>Cancel</Button>
+                <Button.Or />
+                <Button type='submit' color = 'blue' onClick = {this.handleEditSubmitButton.bind(this)}>Submit</Button>
+              </Button.Group>
           </Form>
         </Card.Content>
       </Card>);

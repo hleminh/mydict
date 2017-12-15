@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Search, Dropdown, Image} from 'semantic-ui-react';
-import banner from '../assets/banner.gif'
+import banner from '../assets/images/banner.gif'
 
 import $ from 'jquery';
 

@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import banner from '../assets/images/banner.gif'
+
 import {
   Container,
   Divider,
@@ -6,7 +8,6 @@ import {
   Header,
   Image,
   List,
-  Menu,
   Segment
 } from 'semantic-ui-react';
 
@@ -14,9 +15,9 @@ class FooterLayout extends Component {
   render() {
     return (
       <div className="FooterLayout">
-      <Segment inverted="inverted" vertical="vertical" style={{
+      <Segment color='blue' inverted="inverted" vertical="vertical" style={{
           margin: '5em 0em 0em',
-          padding: '5em 0em'
+          padding: '5em 0em',
         }}>
         <Container textAlign='center'>
           <Grid divided="divided" inverted="inverted" stackable="stackable">
@@ -55,7 +56,7 @@ class FooterLayout extends Component {
             </Grid.Row>
           </Grid>
           <Divider inverted="inverted" section="section"/>
-          <Image centered="centered" size='mini' src='/logo.png'/>
+          <Image centered="centered" size='mini' src={banner}/>
           <List horizontal="horizontal" inverted="inverted" divided="divided" link="link">
             <List.Item as='a' href='#'>Site Map</List.Item>
             <List.Item as='a' href='#'>Contact Us</List.Item>

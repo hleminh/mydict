@@ -30,16 +30,17 @@ const getEntriesFromDBWithCategoryWithFilterWithKata = (category, filter, kata, 
   var entryModel;
   if (category == 'jpn-vie') {
     entryModel = mongoose.model('jpn_vie_entries', entrySchema);
+    if (kata === "true"){
+      filter = hepburn.toKatakana(filter);
+    } else{
+      filter = hepburn.toHiragana(filter);
+    }
+    console.log(`kana filter: |${filter}|`);
   }
   if (category == 'vie-jpn') {
     entryModel = mongoose.model('vie_jpn_entries', entrySchema);
+    console.log(`vnmese filter: |${filter}|`);
   }
-  if (kata === "true"){
-    filter = hepburn.toKatakana(filter);
-  } else{
-    filter = hepburn.toHiragana(filter);
-  }
-  console.log(`kana filter: |${filter}|`);
   entryModel.find({
     $text: {
       $search: filter

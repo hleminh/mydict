@@ -1,20 +1,45 @@
 import React, {Component} from 'react';
 import './App.css';
-import EntryList from './components/EntryList';
-import SearchBar from './components/SearchBar';
 import $ from 'jquery';
 import MenuLayout from './components/MenuLayout';
-import {Container} from 'semantic-ui-react';
+import { Route } from 'react-router-dom';
+import { Switch } from 'react-router';
+import RedirectToSearch from './components/RedirectToSearch';
+import SearchPage from './components/SearchPage';
+import AboutPage from './components/AboutPage';
 
 class App extends Component {
-  constructor(props) {
+  constructor(props){
     super(props);
     this.state = {
       dataList: [],
       category: 'jpn-vie',
       keyword: '',
     };
-  };
+  }
+
+  handleNewSubmit(entry, category, callback){
+    console.log('handleNewSubmit');
+    console.log(entry);
+    console.log(category);
+    var oldData = entry;
+    $.ajax({
+      'url': '/entry/' + category,
+      'type': 'POST',
+      'context': this,
+      'data': entry,
+      success: function(result) {
+        console.log('result: ', result);
+        if (result.origin === this.state.keyword || result.kana === this.state.keyword){
+          this.setState({dataList: this.state.dataList.concat(result)});
+        }
+        callback(true, null);
+      },
+      error: function(result){
+        callback(false, oldData);
+      },
+    });
+  }
 
   handleSearchSubmit(keyword) {
     $.ajax({
@@ -75,28 +100,6 @@ class App extends Component {
     });
   }
 
-  handleNewSubmit(entry, callback){
-    console.log('handleNewSubmit');
-    console.log(entry);
-    var oldData = entry;
-    $.ajax({
-      'url': '/entry/' + this.state.category,
-      'type': 'POST',
-      'context': this,
-      'data': entry,
-      success: function(result) {
-        console.log('result: ', result);
-        if (result.origin === this.state.keyword || result.kana === this.state.keyword){
-          this.setState({dataList: this.state.dataList.concat(result)});
-        }
-        callback(true, null);
-      },
-      error: function(result){
-        callback(false, oldData);
-      },
-    });
-  }
-
   handleDeleteSubmit(id, callback){
     $.ajax({
       'url': '/entry/' + this.state.category + '/' + id,
@@ -128,12 +131,20 @@ class App extends Component {
     return (
       <div className="App">
         <MenuLayout handleNewSubmit = {this.handleNewSubmit.bind(this)}/>
-        <div className = "Body">
-          <Container text>
-            <SearchBar handleSearchSubmit = {this.handleSearchSubmit.bind(this)} onCategoryChange = {this.onCategoryChange.bind(this)}/>
-            <EntryList handleDeleteSubmit = {this.handleDeleteSubmit.bind(this)} handleEditSubmit = {this.handleEditSubmit.bind(this)} dataList = {this.state.dataList} />
-          </Container>
-        </div>
+        <Switch>
+          <Route exact path = '/' component = {RedirectToSearch} />
+          <Route exact path = '/about' component = {AboutPage} />
+          <Route exact path = '/search' render = { () =>
+            <SearchPage
+              handleSearchSubmit = {this.handleSearchSubmit.bind(this)}
+              onCategoryChange = {this.onCategoryChange.bind(this)}
+              handleDeleteSubmit = {this.handleDeleteSubmit.bind(this)}
+              handleEditSubmit = {this.handleEditSubmit.bind(this)}
+              dataList = {this.state.dataList}
+            />
+          }
+          />
+        </Switch>
     </div>);
   }
 }

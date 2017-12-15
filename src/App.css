@@ -29,10 +29,11 @@ body{
 
 .ui.selection.dropdown{
   min-width: 0 !important;
+  min-height: 0 !important;
   border: 0 !important;
   border-radius: 0 !important;
   background: white;
-  height: 43.42px !important;
+  height: 42px !important;
 }
 
 
