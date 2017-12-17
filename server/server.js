@@ -9,6 +9,7 @@ const path = require('path');
 const http = require('http');
 const config = require('./config.json');
 const entryController = require('./modules/entry/EntryController');
+const userController = require('./modules/user/UserController');
 
 var app = express();
 app.use(cors());
@@ -20,6 +21,8 @@ app.use(session({secret: 'secret', resave: false, saveUninitialized: false}));
 app.use(passport.initialize());
 
 app.use('/entry', entryController);
+app.use('/user', userController);
+
 
 const server = http.createServer(app);
 

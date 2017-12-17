@@ -8,7 +8,7 @@ class AboutPage extends Component{
   render(){
     return(
       <div className="">
-        <Container text style={{ marginTop: '100px'}}>
+        <Container text style={{ marginTop: '70px'}}>
           <Header as='h1'>About Me</Header>
 
           <p>Lorem ipsum.</p>

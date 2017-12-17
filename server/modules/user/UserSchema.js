@@ -19,7 +19,7 @@ const usersSchema = new Schema({
   admin: {
     type: Boolean,
     default: false
-  }
+  },
   entries:{
     type: [Schema.Types.ObjectId],
     refPath: 'entries.kind',

@@ -99,33 +99,37 @@ class Entry extends Component {
                 onClick={this.handleTTS.bind(this)}
                 >
                 </Button>
-                <Button circular={true} floated='right' active={false} icon={
-                  <Icon className='edit icon'>
-                  </Icon>
-                }
-                onClick={this.handleEditButton.bind(this)}
-                >
-                </Button>
-                <Modal size = 'tiny' trigger = {
+                {this.props.userAccount && this.props.userAccount.user.admin &&
                   <Button circular={true} floated='right' active={false} icon={
-                    <Icon className='trash icon'>
+                    <Icon className='edit icon'>
                     </Icon>
                   }
-                  onClick = {this.handleModalOpen.bind(this)}
+                  onClick={this.handleEditButton.bind(this)}
                   >
                   </Button>
                 }
-                  open={this.state.modalOpen}
-                  >
-                    <Modal.Header>Xác nhận xóa?</Modal.Header>
-                    <Modal.Content>
-                      <Button.Group fluid>
-                        <Button type='submit' onClick = {this.handleDeleteCancelButton.bind(this)}>Cancel</Button>
-                        <Button.Or />
-                        <Button type='submit' color='red' onClick = {this.handleDeleteSubmitButton.bind(this)}>Xóa</Button>
-                      </Button.Group>
-                    </Modal.Content>
-                </Modal>
+                {this.props.userAccount && this.props.userAccount.user.admin &&
+                  <Modal size = 'tiny' trigger = {
+                    <Button circular={true} floated='right' active={false} icon={
+                      <Icon className='trash icon'>
+                      </Icon>
+                    }
+                    onClick = {this.handleModalOpen.bind(this)}
+                    >
+                    </Button>
+                  }
+                    open={this.state.modalOpen}
+                    >
+                      <Modal.Header>Xác nhận xóa?</Modal.Header>
+                      <Modal.Content>
+                        <Button.Group fluid>
+                          <Button type='submit' onClick = {this.handleDeleteCancelButton.bind(this)}>Cancel</Button>
+                          <Button.Or />
+                          <Button type='submit' color='red' onClick = {this.handleDeleteSubmitButton.bind(this)}>Xóa</Button>
+                        </Button.Group>
+                      </Modal.Content>
+                  </Modal>
+                }
             </Card.Header>
             <Card.Meta>
               {this.props.data.kana}
@@ -140,23 +144,23 @@ class Entry extends Component {
       return(
         <Card fluid centered>
           <Card.Content>
-            <Form>
-              <Form.Field>
+            <Form onSubmit={this.handleEditSubmitButton.bind(this)}>
+              <Form.Field required>
                 <label>Origin</label>
                 <input ref="origin" placeholder='Enter origin' defaultValue={this.props.data.origin}/>
               </Form.Field>
-              <Form.Field>
+              <Form.Field required>
                 <label>Kana</label>
                 <input ref="kana" placeholder='Enter kana' defaultValue={this.props.data.kana}/>
               </Form.Field>
-              <Form.Field>
+              <Form.Field required>
                 <label>Definition</label>
                 <input ref="definition" placeholder='Enter definition' defaultValue={JSON.stringify(this.props.data.definition)}/>
               </Form.Field>
               <Button.Group fluid>
                 <Button type='submit' onClick = {this.handleEditCancelButton.bind(this)}>Cancel</Button>
                 <Button.Or />
-                <Button type='submit' color = 'blue' onClick = {this.handleEditSubmitButton.bind(this)}>Submit</Button>
+                <Button type='submit' color = 'blue'>Submit</Button>
               </Button.Group>
           </Form>
         </Card.Content>

@@ -10,7 +10,7 @@ class EntryList extends Component {
 
   render() {
     const entries = this.props.dataList.map((data) => (
-      <Entry handleDeleteSubmit = {this.props.handleDeleteSubmit} handleEditSubmitButton = {this.props.handleEditSubmit} key = {data._id} data = {data}/>
+      <Entry userAccount = {this.props.userAccount} handleDeleteSubmit = {this.props.handleDeleteSubmit} handleEditSubmitButton = {this.props.handleEditSubmit} key = {data._id} data = {data}/>
     ));
 
     return (

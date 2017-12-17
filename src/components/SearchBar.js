@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Search, Dropdown, Image} from 'semantic-ui-react';
-import banner from '../assets/images/banner.gif'
+import banner from '../assets/images/banner.png'
 
 import $ from 'jquery';
 
@@ -13,12 +13,15 @@ const resultRenderer = ({origin, kana}) => [
 class SearchBar extends Component {
   componentDidMount(){
     this.setState({
-      category: 'jpn-vie'
+      category: 'jpn-vie',
+      value: ''
     });
   }
 
   componentWillMount() {
-    this.resetComponent()
+    this.setState({
+      value: this.props.value
+    });
   }
 
   resetComponent = () => this.setState({isLoading: false, results: [], value: ''})
@@ -30,6 +33,7 @@ class SearchBar extends Component {
 
   handleResultSelect = (e, {result}) => {
     this.setState({value: result.origin});
+    this.refs.searchInput.value = result.origin;
     this.props.handleSearchSubmit(result.origin, this.state.category);
   }
 
@@ -72,29 +76,26 @@ class SearchBar extends Component {
       },
     ]
 
-    const {isLoading, value, results} = this.state;
-
     return (
       <div className="SearchBarContainer">
-        <h1>SUCC myDict</h1>
-        <Image centered size='medium' src={banner} style={{
+        <h1>SUGE myDict</h1>
+        <Image centered size='small' src={banner} style={{
         }}/>
         <h2>Từ điển Nhật-Việt/Việt-Nhật</h2>
         <span className = "SearchBar">
           <Dropdown ref="option" defaultValue="jpn-vie" selection options={searchOptions} onChange = {this.onCategoryChange.bind(this)}/>
           <Search
-            loading={isLoading}
+            loading={this.state.isLoading}
             onResultSelect={this.handleResultSelect}
             onSearchChange={this.handleSearchChange}
-            results={results}
-            value={value}
+            results={this.state.results}
             resultRenderer={resultRenderer}
             size="large"
             aligned="left"
             input={
               <div>
                 <div className="ui icon input">
-                <input type="text" tabIndex="0" className="prompt" autoComplete="off" value={this.state.value} placeholder="Nhập từ khóa tìm kiếm..."/>
+                <input ref="searchInput" type="text" tabIndex="0" className="prompt" autoComplete="off" defaultValue={this.state.value} placeholder="Nhập từ khóa tìm kiếm..."/>
                 <i aria-hidden="true" className="search icon" onClick={this.handleSubmitButton.bind(this)}></i>
                 </div>
               </div>

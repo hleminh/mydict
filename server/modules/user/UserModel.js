@@ -1,11 +1,9 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const userSchema = require('./userSchema');
+const userSchema = require('./UserSchema');
 const passport = require('passport');
-const FacebookStrategy = require('passport-facebook').Strategy;
 const passportJWT = require("passport-jwt");
 const jwt = require('jsonwebtoken');
-const postController = require('../posts/postController');
 var LocalStrategy = require('passport-local').Strategy;
 var ExtractJwt = passportJWT.ExtractJwt;
 var JwtStrategy = passportJWT.Strategy;
@@ -117,7 +115,7 @@ const deleteEntry = (entryId, userId, callback) => {
 };
 
 const getEntries = (userId, callback) => {
-  userModel.findById(userId).populate('entries').(err, doc) => {
+  userModel.findById(userId).populate('entries').exec((err, doc) => {
     if (err) {
       callback(err);
     } else {
@@ -128,9 +126,8 @@ const getEntries = (userId, callback) => {
 
 module.exports = {
   createUser,
-  savePost,
-  deletePost,
-  getPosts,
-  getPostsURL,
-  serializeUser
+  serializeUser,
+  saveEntry,
+  getEntries,
+  deleteEntry,
 }

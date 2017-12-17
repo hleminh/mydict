@@ -41,6 +41,46 @@ class App extends Component {
     });
   }
 
+  handleSignUpSubmit(credentials, callback){
+    console.log(credentials);
+    var oldData = credentials;
+    $.ajax({
+      'url': '/user/register',
+      'type': 'POST',
+      'context': this,
+      'data': credentials,
+      success: function(result) {
+        callback(true, null);
+      },
+      error: function(result){
+        callback(false, oldData);
+      },
+    });
+  }
+
+  handleSignInSubmit(credentials, callback){
+    console.log(credentials);
+    var oldData = credentials;
+    $.ajax({
+      'url': '/user/login',
+      'type': 'POST',
+      'context': this,
+      'data': credentials,
+      success: function(result) {
+        this.setState({userAccount: result});
+        console.log(result);
+        callback(true, null);
+      },
+      error: function(result){
+        callback(false, oldData);
+      },
+    });
+  }
+
+  handleSignOutSubmit(credentials, callback){
+    this.setState({userAccount: ''});
+  }
+
   handleSearchSubmit(keyword) {
     $.ajax({
       'url': '/entry/' + this.state.category + '?filter=' + keyword,
@@ -130,7 +170,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <MenuLayout handleNewSubmit = {this.handleNewSubmit.bind(this)}/>
+        <MenuLayout userAccount={this.state.userAccount} handleSignOutSubmit = {this.handleSignOutSubmit.bind(this)}handleSignInSubmit = {this.handleSignInSubmit.bind(this)} handleSignUpSubmit = {this.handleSignUpSubmit.bind(this)} handleNewSubmit = {this.handleNewSubmit.bind(this)}/>
         <Switch>
           <Route exact path = '/' component = {RedirectToSearch} />
           <Route exact path = '/about' component = {AboutPage} />
@@ -141,6 +181,8 @@ class App extends Component {
               handleDeleteSubmit = {this.handleDeleteSubmit.bind(this)}
               handleEditSubmit = {this.handleEditSubmit.bind(this)}
               dataList = {this.state.dataList}
+              userAccount = {this.state.userAccount}
+              value = {this.state.keyword}
             />
           }
           />

@@ -1,3 +1,8 @@
+const express = require('express');
+const Router = express.Router();
+const userModel = require('./UserModel');
+const passport = require('passport');
+
 Router.post('/login', passport.authenticate('local', { session: false }), (req, res, next) => {
   let token = userModel.serializeUser(req.user, 60 * 60 * 24 * 3);
   return res.send({user: req.user, token: token});
