@@ -10,8 +10,19 @@ class SearchPage extends Component {
     return (
         <div className = "Body">
           <Container text>
-            <SearchBar value = {this.props.value} handleSearchSubmit = {this.props.handleSearchSubmit} onCategoryChange = {this.props.onCategoryChange}/>
-            <EntryList userAccount = {this.props.userAccount} handleDeleteSubmit = {this.props.handleDeleteSubmit} handleEditSubmit = {this.props.handleEditSubmit} dataList = {this.props.dataList} />
+            <SearchBar
+              keyword = {this.props.keyword}
+              handleSearchSubmit = {this.props.handleSearchSubmit}
+              onCategoryChange = {this.props.onCategoryChange}
+              category = {this.props.category}
+              />
+            <EntryList
+              userAccount = {this.props.userAccount}
+              handleDeleteSubmit = {this.props.handleDeleteSubmit}
+              handleEditSubmit = {this.props.handleEditSubmit}
+              handleSaveSubmit = {this.props.handleSaveSubmit}
+              handleUnSaveSubmit = {this.props.handleUnSaveSubmit}
+              dataList = {this.props.dataList} />
           </Container>
         </div>);
   }

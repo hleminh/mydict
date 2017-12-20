@@ -9,10 +9,10 @@ const getAllEntriesFromDBWithCategoryWithPageWithLimit = (category, page, limit,
   if (limit == 0)
     limit = 12;
   var entryModel;
-  if (category == 'jpn-vie') {
+  if (category == 'jpn_vie') {
     entryModel = mongoose.model('jpn_vie_entries', entrySchema);
   }
-  if (category == 'vie-jpn') {
+  if (category == 'vie_jpn') {
     entryModel = mongoose.model('vie_jpn_entries', entrySchema);
   }
   entryModel.find({}).skip((page - 1) * limit).limit(limit).lean().exec((err, doc) => {
@@ -26,9 +26,9 @@ const getAllEntriesFromDBWithCategoryWithPageWithLimit = (category, page, limit,
 }
 
 const getEntriesFromDBWithCategoryWithFilterWithKata = (category, filter, kata, callback) => {
-  console.log('getEntriesFromDBWithCategoryWithFilter');
+  console.log('getEntriesFromDBWithCategoryWithFilterWithKata');
   var entryModel;
-  if (category == 'jpn-vie') {
+  if (category == 'jpn_vie') {
     entryModel = mongoose.model('jpn_vie_entries', entrySchema);
     if (kata === "true"){
       filter = hepburn.toKatakana(filter);
@@ -37,13 +37,13 @@ const getEntriesFromDBWithCategoryWithFilterWithKata = (category, filter, kata, 
     }
     console.log(`kana filter: |${filter}|`);
   }
-  if (category == 'vie-jpn') {
+  if (category == 'vie_jpn') {
     entryModel = mongoose.model('vie_jpn_entries', entrySchema);
     console.log(`vnmese filter: |${filter}|`);
   }
   entryModel.find({
     $text: {
-      $search: filter
+      $search: "\"" + filter + "\""
     }
   }).lean().sort([
     ['priority', -1]
@@ -60,10 +60,10 @@ const getEntriesFromDBWithCategoryWithFilterWithKata = (category, filter, kata, 
 const getAllExistingIdWithCategory = (category, callback) =>{
   console.log('getAllExistingIdWithCategory');
   var entryModel;
-  if (category == 'jpn-vie') {
+  if (category == 'jpn_vie') {
     entryModel = mongoose.model('jpn_vie_entries', entrySchema);
   }
-  if (category == 'vie-jpn') {
+  if (category == 'vie_jpn') {
     entryModel = mongoose.model('vie_jpn_entries', entrySchema);
   }
   entryModel.findOne().select('id -_id').sort([
@@ -86,10 +86,10 @@ const createNewEntryWithCategory = (category, newEntry, callback) => {
   console.log(newEntry);
   getAllExistingIdWithCategory(category, (error, result) => {
     var entryModel;
-    if (category == 'jpn-vie') {
+    if (category == 'jpn_vie') {
       entryModel = mongoose.model('jpn_vie_entries', entrySchema);
     }
-    if (category == 'vie-jpn') {
+    if (category == 'vie_jpn') {
       entryModel = mongoose.model('vie_jpn_entries', entrySchema);
     }
     var trueNewEntry = {
@@ -114,10 +114,10 @@ const updateEntryWithCategoryById = (category, id, fields, callback) => {
   console.log(id);
   console.log(fields);
   var entryModel;
-  if (category == 'jpn-vie') {
+  if (category == 'jpn_vie') {
     entryModel = mongoose.model('jpn_vie_entries', entrySchema);
   }
-  if (category == 'vie-jpn') {
+  if (category == 'vie_jpn') {
     entryModel = mongoose.model('vie_jpn_entries', entrySchema);
   }
   entryModel.findOneAndUpdate({
@@ -134,10 +134,10 @@ const updateEntryWithCategoryById = (category, id, fields, callback) => {
 
 const deleteEntryWithCategoryById = (category, id, callback) => {
   var entryModel;
-  if (category == 'jpn-vie') {
+  if (category == 'jpn_vie') {
     entryModel = mongoose.model('jpn_vie_entries', entrySchema);
   }
-  if (category == 'vie-jpn') {
+  if (category == 'vie_jpn') {
     entryModel = mongoose.model('vie_jpn_entries', entrySchema);
   }
   entryModel.remove({
@@ -153,10 +153,10 @@ const deleteEntryWithCategoryById = (category, id, callback) => {
 
 const getEntryWithCategoryById = (category, id, callback) => {
   var entryModel;
-  if (category == 'jpn-vie') {
+  if (category == 'jpn_vie') {
     entryModel = mongoose.model('jpn_vie_entries', entrySchema);
   }
-  if (category == 'vie-jpn') {
+  if (category == 'vie_jpn') {
     entryModel = mongoose.model('vie_jpn_entries', entrySchema);
   }
   entryModel.findOne({

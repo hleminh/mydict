@@ -11,50 +11,50 @@ const resultRenderer = ({origin, kana}) => [
 ]
 
 class SearchBar extends Component {
-  componentDidMount(){
-    this.setState({
-      category: 'jpn-vie',
-      value: ''
-    });
+
+  constructor(props){
+    super(props);
+    this.state = {
+      isLoading: false,
+      results: [],
+    }
   }
 
-  componentWillMount() {
-    this.setState({
-      value: this.props.value
-    });
-  }
-
-  resetComponent = () => this.setState({isLoading: false, results: [], value: ''})
+  resetComponent = () => this.setState({isLoading: false, results: []});
 
   handleSubmitButton(e) {
     e.preventDefault();
-    this.props.handleSearchSubmit(this.state.value, this.state.category);
+    this.props.handleSearchSubmit(this.refs.searchInput.value);
   };
 
   handleResultSelect = (e, {result}) => {
-    this.setState({value: result.origin});
     this.refs.searchInput.value = result.origin;
-    this.props.handleSearchSubmit(result.origin, this.state.category);
+    this.props.handleSearchSubmit(result.origin);
   }
 
   onCategoryChange(e, {value}){
-    this.setState({category: value});
+    this.resetComponent();
+    this.refs.searchInput.value = '';
     this.props.onCategoryChange(value);
+  }
+
+  handleOnMouseDown(e){
+    // e.preventDefault();
   }
 
   handleSearchChange = (e, {value}) => {
     var kata = "false";
-    this.setState({isLoading: true, value})
+    this.setState({isLoading: true});
 
     setTimeout(() => {
-      if (this.state.value.length < 1){
+      if (value.length < 1){
         return this.resetComponent();
       }
-      if (this.state.value === this.state.value.toUpperCase()){
+      if (value === value.toUpperCase()){
         kata = "true";
       }
       $.ajax({
-        'url': '/entry/' + this.state.category + '?filter=' + value + '&kata=' + kata ,
+        'url': '/entry/' + this.props.category + '?filter=' + value + '&kata=' + kata ,
         'type': 'GET',
         'context': this,
         success: function(result) {
@@ -68,11 +68,11 @@ class SearchBar extends Component {
     const searchOptions = [
       {
       text: "Nhật - Việt",
-      value: "jpn-vie"
+      value: "jpn_vie"
       },
       {
       text: "Việt - Nhật",
-      value: "vie-jpn"
+      value: "vie_jpn"
       },
     ]
 
@@ -83,19 +83,24 @@ class SearchBar extends Component {
         }}/>
         <h2>Từ điển Nhật-Việt/Việt-Nhật</h2>
         <span className = "SearchBar">
-          <Dropdown ref="option" defaultValue="jpn-vie" selection options={searchOptions} onChange = {this.onCategoryChange.bind(this)}/>
+          <Dropdown ref="option" value={this.props.category}
+            selection
+            options={searchOptions}
+            onChange = {this.onCategoryChange.bind(this)}/>
           <Search
             loading={this.state.isLoading}
             onResultSelect={this.handleResultSelect}
             onSearchChange={this.handleSearchChange}
             results={this.state.results}
             resultRenderer={resultRenderer}
+            onMouseDown = {this.handleOnMouseDown.bind(this)}
             size="large"
             aligned="left"
+            value = {this.props.keyword}
             input={
               <div>
                 <div className="ui icon input">
-                <input ref="searchInput" type="text" tabIndex="0" className="prompt" autoComplete="off" defaultValue={this.state.value} placeholder="Nhập từ khóa tìm kiếm..."/>
+                <input ref="searchInput" type="text" tabIndex="0" className="prompt" autoComplete="off" defaultValue={this.props.keyword} placeholder="Nhập từ khóa tìm kiếm..."/>
                 <i aria-hidden="true" className="search icon" onClick={this.handleSubmitButton.bind(this)}></i>
                 </div>
               </div>

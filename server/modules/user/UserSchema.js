@@ -20,10 +20,13 @@ const usersSchema = new Schema({
     type: Boolean,
     default: false
   },
-  entries:{
-    type: [Schema.Types.ObjectId],
-    refPath: 'entries.kind',
-  }
+  entries: [{
+    kind: String,
+    item: {
+      type: Schema.Types.ObjectId,
+      refPath: 'entries.kind',
+    },
+  }],
 }, {timestamps: {createAt: 'create_at', updateAt: 'update_at'}});
 
 usersSchema.pre('save', function(next) {

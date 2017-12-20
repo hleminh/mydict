@@ -4,6 +4,10 @@
   padding-bottom: 50px;
 }
 
+.AboutBody{
+  padding-top: 70px;
+}
+
 body{
   background: #EEE !important;
 }
@@ -73,6 +77,10 @@ h1, h2{
   text-align: center;
 }
 
+.ui.card>.content .star.icon:hover, .ui.cards>.card>.content .star.icon:hover{
+  color: inherit !important;
+}
+
 @media screen and (max-width: 414px) {
   .ui.input input{
     border: none !important;
@@ -98,6 +106,10 @@ h1, h2{
   }
 
   .Body{
+    padding-top: 215px;
+  }
+
+  .AboutBody{
     padding-top: 215px;
   }
 }

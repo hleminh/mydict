@@ -11,6 +11,49 @@ class Entry extends Component {
     }
   }
 
+  componentWillMount(){
+    if (this.props.userAccount){
+      var savedEntriesId = [];
+      // console.log(this.props.userAccount.user.entries);
+      for (var element in this.props.userAccount.user.entries){
+        // console.log(this.props.userAccount.user.entries[element]);
+        savedEntriesId.push(this.props.userAccount.user.entries[element].item);
+      }
+      // console.log('mount savedEntriesId', savedEntriesId);
+      if (savedEntriesId.includes(this.props.data._id)){
+        this.setState({
+          saved: true,
+        });
+      }else{
+        this.setState({
+          saved: false,
+        });
+      }
+    }
+  }
+
+  componentWillReceiveProps(nextProps){
+    // console.log(nextProps);
+    if (nextProps.userAccount){
+      var savedEntriesId = [];
+      // console.log(nextProps.userAccount.user.entries);
+      for (var element in nextProps.userAccount.user.entries){
+        // console.log(nextProps.userAccount.user.entries[element]);
+        savedEntriesId.push(nextProps.userAccount.user.entries[element].item);
+      }
+      // console.log('nextprops savedEntriesId', savedEntriesId);
+      if (savedEntriesId.includes(this.props.data._id)){
+        this.setState({
+          saved: true,
+        });
+      }else{
+        this.setState({
+          saved: false,
+        });
+      }
+    }
+  }
+
   handleTTS(e) {
     window.speechSynthesis.cancel();
     var msg = new SpeechSynthesisUtterance();
@@ -84,6 +127,38 @@ class Entry extends Component {
     });
   }
 
+  handleSaveButton(e){
+    e.preventDefault();
+    this.setState({
+      saved: true,
+    });
+    this.props.handleSaveSubmit(this.props.data, (success, err) => {
+      if (!success){
+        // console.log('save failed');
+        // console.log(err);
+        this.setState({
+          saved: false,
+        });
+      }
+    });
+  }
+
+  handleUnSaveButton(e){
+    e.preventDefault();
+    this.setState({
+      saved: false,
+    });
+    this.props.handleUnSaveSubmit(this.props.data, (success, err) => {
+      if (!success){
+        // console.log('unsave failed');
+        // console.log(err);
+        this.setState({
+          saved: true,
+        });
+      }
+    });
+  }
+
   render() {
     if(!this.state.editFormOpen) {
       return (
@@ -99,6 +174,26 @@ class Entry extends Component {
                 onClick={this.handleTTS.bind(this)}
                 >
                 </Button>
+                {this.props.userAccount && !this.state.saved &&
+                  <Button circular={true} floated='right' active={false} icon={
+                    <Icon className='empty star icon'>
+                    </Icon>
+                  }
+                  onClick={this.handleSaveButton.bind(this)}
+                  >
+                  </Button>
+                }
+
+                {this.props.userAccount && this.state.saved &&
+                  <Button circular={true} floated='right' active={false} icon={
+                    <Icon className='star icon'>
+                    </Icon>
+                  }
+                  onClick={this.handleUnSaveButton.bind(this)}
+                  >
+                  </Button>
+                }
+
                 {this.props.userAccount && this.props.userAccount.user.admin &&
                   <Button circular={true} floated='right' active={false} icon={
                     <Icon className='edit icon'>

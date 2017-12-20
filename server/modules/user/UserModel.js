@@ -76,13 +76,19 @@ passport.use(new JwtStrategy(jwtOptions, function(jwt_payload, next) {
   })
 }));
 
-const saveEntry = (entryId, userId, callback) => {
+const saveEntry = (entry, userId, callback) => {
   userModel.findById(userId, (err, doc) => {
     if (err) {
       callback(err);
     } else {
-      if (doc.entries.indexOf(entryId) == -1) {
-        doc.postId.push(entryId);
+      var saveEntry = {
+        kind: entry.kind + '_entries',
+        item: entry._id,
+      };
+      console.log(saveEntry);
+      if (doc.entries.indexOf(saveEntry) == -1) {
+        doc.entries.push(saveEntry);
+        console.log(doc.entries);
         doc.save((err, updatedDoc) => {
           if (err) {
             callback(err);
@@ -102,7 +108,13 @@ const deleteEntry = (entryId, userId, callback) => {
     if (err) {
       callback(err);
     } else {
-      doc.postId.splice(doc.postId.indexOf(entryId), 1);
+      var deleteEntry;
+      for (element in doc.entries){
+        if (entryId == doc.entries[element].item){
+          deleteEntry = doc.entries[element];
+        }
+      }
+      doc.entries.splice(doc.entries.indexOf(deleteEntry), 1);
       doc.save((err, updatedDoc) => {
         if (err) {
           callback(err);
@@ -115,10 +127,11 @@ const deleteEntry = (entryId, userId, callback) => {
 };
 
 const getEntries = (userId, callback) => {
-  userModel.findById(userId).populate('entries').exec((err, doc) => {
+  userModel.findById(userId).populate('entries.item').exec((err, doc) => {
     if (err) {
       callback(err);
     } else {
+      console.log(doc);
       callback(null, doc.entries);
     }
   });

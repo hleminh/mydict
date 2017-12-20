@@ -57,7 +57,7 @@ class MenuLayout extends Component {
       kana: this.state.kana,
       definition: JSON.parse(this.state.definition),
     }
-    var category = (this.state.tab === "0") ? 'jpn-vie' : 'vie-jpn';
+    var category = (this.state.tab === "0") ? 'jpn_vie' : 'vie_jpn';
     this.props.handleNewSubmit(newData, category, (success, oldData) => {
       if (success){
         this.setState({
@@ -214,6 +214,11 @@ class MenuLayout extends Component {
           <Menu.Item as={Link} to='/about' name='about'>
             About
           </Menu.Item>
+          {this.props.userAccount &&
+            <Menu.Item as={Link} to='/saved' name='saved'>
+              Từ đã lưu
+            </Menu.Item>
+          }
           <Menu.Menu position = 'right'>
             {this.props.userAccount && this.props.userAccount.user.admin &&
             <Modal size = 'tiny' trigger={

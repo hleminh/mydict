@@ -35,4 +35,73 @@ Router.post('/register', function(req, res, next) {
   });
 });
 
+Router.post('/save/:id', (req, res) => {
+  console.log(req.body._id);
+  console.log(req.body.kind);
+  userModel.saveEntry(req.body, req.params.id, (err, doc) => {
+    if (err) {
+      res.status(400);
+      res.send(err);
+    } else {
+      res.send(doc);
+    }
+  });
+});
+
+Router.post('/unsave/:id', (req, res) => {
+  console.log(req.body._id);
+  userModel.deleteEntry(req.body._id, req.params.id, (err, doc) => {
+    if (err) {
+      res.status(400);
+      res.send(err);
+    } else {
+      res.send(doc);
+    }
+  });
+});
+
+Router.get('/get/:id', (req, res) => {
+  userModel.getEntries(req.params.id, (err, doc) => {
+    if (err) {
+      res.status(400);
+      res.send(err);
+    } else {
+      res.send(doc);
+    }
+  });
+});
+
+// Router.post('/save', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+//   userModel.saveEntry(req.body._id, req.user._id, (err, doc) => {
+//     if (err) {
+//       res.status(400);
+//       res.send(err);
+//     } else {
+//       res.send(doc);
+//     }
+//   });
+// });
+//
+// Router.post('/unsave', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+//   userModel.deleteEntry(req.body._id, req.user._id, (err, doc) => {
+//     if (err) {
+//       res.status(400);
+//       res.send(err);
+//     } else {
+//       res.send(doc);
+//     }
+//   });
+// });
+//
+// Router.post('/get', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+//   userModel.getEntries(req.user._id, (err, doc) => {
+//     if (err) {
+//       res.status(400);
+//       res.send(err);
+//     } else {
+//       res.send(doc);
+//     }
+//   });
+// });
+
 module.exports = Router;

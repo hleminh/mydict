@@ -7,8 +7,8 @@ import FooterLayout from './FooterLayout';
 class AboutPage extends Component{
   render(){
     return(
-      <div className="">
-        <Container text style={{ marginTop: '70px'}}>
+      <div className="AboutBody">
+        <Container text>
           <Header as='h1'>About Me</Header>
 
           <p>Lorem ipsum.</p>
