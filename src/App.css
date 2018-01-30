@@ -23,7 +23,7 @@ body{
   display: inline-block;
 }
 
-.ui.input input{
+.ui.search input{
   border: none !important;
   border-radius: 0 !important;
   border-left: 3px solid rgba(34,36,38,.15) !important;
@@ -81,8 +81,66 @@ h1, h2{
   color: inherit !important;
 }
 
+.ChatBotLayout{
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+}
+
+.ChatBotHeaderContainer{
+  background: #2185d0 !important;
+}
+
+.ChatBotHeader{
+  color: white !important;
+}
+
+.ChatBotMessageContainer{
+  height: 400px;
+  overflow-y: auto;
+}
+
+.UserMessage{
+  float: right;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.UserMessageCol{
+  padding: 0 !important;
+}
+
+.BotMessage{
+  float: left;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.BotAvatarCol{
+  padding: 0 !important;
+}
+
+.BotMessageCol{
+  padding: 0 !important;
+}
+
+.MessageContainer{
+  padding: 0 !important;
+  margin-left: 8px;
+  margin-right: 8px;
+  margin-bottom: 4px;
+  margin-top: 4px;
+  display: inline-block;
+  width: 100%;
+}
+
+.MessageList{
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+}
+
 @media screen and (max-width: 414px) {
-  .ui.input input{
+  .ui.search input{
     border: none !important;
     border-radius: 0 !important;
     border-left: 3px solid rgba(34,36,38,.15) !important;

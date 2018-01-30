@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import './App.css';
 import $ from 'jquery';
 import MenuLayout from './components/MenuLayout';
+import ChatBotLayout from './components/ChatBotLayout';
 import { Route } from 'react-router-dom';
 import { Switch } from 'react-router';
 import RedirectToSearch from './components/RedirectToSearch';
@@ -281,6 +282,7 @@ class App extends Component {
           }
           />
         </Switch>
+      <ChatBotLayout />
     </div>);
   }
 }
