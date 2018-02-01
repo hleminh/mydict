@@ -1,15 +1,8 @@
 import React, {Component} from 'react';
 import {
-  Container,
-  Image,
-  Menu,
-  Modal,
   Button,
-  Form,
-  Message,
-  Dropdown,
-  Comment,
   Icon,
+  Popup,
 } from 'semantic-ui-react';
 import ChatBot from './ChatBot';
 
@@ -21,16 +14,21 @@ class ChatBotLayout extends Component {
     }
   }
 
-  handleButtonClick(){
+  handleButtonClick(e){
     if (this.state.chatBoxOpen){
       this.setState({
         'chatBoxOpen': false,
+      }, () => {
       });
     }else{
       this.setState({
         'chatBoxOpen': true,
       });
     }
+  }
+
+  handleChatBotLayoutButtonRef(node){
+    this.chatBotLayoutButton = node;
   }
 
   render(){
@@ -40,12 +38,17 @@ class ChatBotLayout extends Component {
           <ChatBot />
         }
         <br />
-        <Button onClick = {this.handleButtonClick.bind(this)} size = 'huge' circular={true} color = 'blue' floated='right' icon={
-          <Icon className='comments icon'>
-          </Icon>
-        }
-        >
-        </Button>
+        <Popup
+          trigger={
+            <Button ref = {this.handleChatBotLayoutButtonRef.bind(this)} className = {this.state.chatBoxOpen?'SelectedChatBotLayoutButton':'ChatBotLayoutButton'} active = {this.state.chatBoxOpen} onClick = {this.handleButtonClick.bind(this)} size = 'huge' circular={true} color = 'blue' floated='right' icon={
+              <Icon color = {this.state.chatBoxOpen?'blue':''} className='comments icon'>
+              </Icon>
+            }
+            >
+            </Button>
+          }
+          content={this.state.chatBoxOpen?'Bấm để tắt cửa sổ chat':'Chat với SUGE Bot'}
+        />
     </div>
     );
   }

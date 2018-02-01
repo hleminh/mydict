@@ -102,6 +102,7 @@ h1, h2{
 
 .UserMessage{
   float: right;
+  border-radius: 8px !important;
   word-wrap: break-word;
   word-break: break-word;
 }
@@ -112,12 +113,20 @@ h1, h2{
 
 .BotMessage{
   float: left;
+  border-radius: 8px !important;
   word-wrap: break-word;
   word-break: break-word;
 }
 
 .BotAvatarCol{
   padding: 0 !important;
+}
+
+.SelectedChatBotLayoutButton{
+  background: white !important;
+}
+
+.ChatBotLayoutButton{
 }
 
 .BotMessageCol{
