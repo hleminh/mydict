@@ -6,6 +6,31 @@ import {
 } from 'semantic-ui-react';
 import MessageList from './MessageList';
 
+const steps = [
+  {
+    'id': 0,
+    'message': 'Xin chào! Tôi là SUGE Bot. Tôi có thể giúp bạn việc gì?\n1. Tìm từ Nhật - Việt\n2. Tìm từ Việt - Nhật',
+    'options': [
+      {
+        'case': 1,
+        'next': 1
+      },
+      {
+        'case': 2,
+        'next': 2
+      }
+    ]
+  },
+  {
+    'id': 1,
+    'message': 'Xin hãy nhập từ tiếng Nhật',
+  },
+  {
+    'id': 2,
+    'message': 'Xin hãy nhập từ tiếng Việt',
+  },
+];
+
 class ChatBot extends Component {
 
   constructor(props){
@@ -14,13 +39,69 @@ class ChatBot extends Component {
       'userInput': '',
       'dataList': [
         {
-          'message': 'Xin chào! Tôi là SUGE Bot. Tôi có thể giúp bạn việc gì?',
+          'message': steps[0].message,
           'type': 'botMessage',
         },
       ],
       'disableInput' : false,
       'userLoadingExist': false,
+      'currentStep': steps[0],
     }
+  }
+
+  botProcess(){
+    for (var step in steps){
+      if (this.state.currentStep.id === steps[step].id){
+        if (this.state.currentStep.options){
+          for (var option in this.state.currentStep.options){
+            if (parseInt(this.state.userInput) === this.state.currentStep.options[option].case){
+              console.log('User picked option: ' +  this.state.userInput);
+              this.setState({
+                  'currentStep': steps[this.state.currentStep.options[option].next],
+                }, () => {
+                  this.botReply();
+                }
+              )
+            }
+          }
+        } else{
+
+        }
+      }
+    }
+  }
+
+  botReply(){
+    this.setState({
+      'dataList': this.state.dataList.concat([
+        {
+          'type': 'botLoading',
+        }
+      ]),
+      'userInput': '',
+      'disableInput' : true,
+      'userLoadingExist': false,
+    }, () => {
+      this.chatBotMessageContainer.scrollTop = this.chatBotMessageContainer.scrollHeight;
+      setTimeout(()=>{
+        this.setState({
+          dataList: this.state.dataList.map((data) => {
+            if (data.type === 'botLoading'){
+              return Object.assign({}, data, {
+                  'message': this.state.currentStep.message,
+                  'type': 'botMessage',
+                });
+            } else{
+              return data;
+            }
+          }),
+          'disableInput': false,
+        }, () => {
+          this.chatBotMessageContainer.scrollTop = this.chatBotMessageContainer.scrollHeight;
+          this.userInput.focus();
+        });
+      }, 1000);
+    });
   }
 
   handleButtonClick(){
@@ -38,36 +119,7 @@ class ChatBot extends Component {
           }
         }),
       }, () => {
-        this.setState({
-          'dataList': this.state.dataList.concat([
-            {
-              'type': 'botLoading',
-            }
-          ]),
-          'userInput': '',
-          'disableInput' : true,
-          'userLoadingExist': false,
-        }, () => {
-          this.chatBotMessageContainer.scrollTop = this.chatBotMessageContainer.scrollHeight;
-          setTimeout(()=>{
-            this.setState({
-              dataList: this.state.dataList.map((data) => {
-                if (data.type === 'botLoading'){
-                  return Object.assign({}, data, {
-                      'message': 'Xin chào! Tôi là SUGE Bot. Tôi có thể giúp bạn việc gì?',
-                      'type': 'botMessage',
-                    });
-                } else{
-                  return data;
-                }
-              }),
-              'disableInput': false,
-            }, () => {
-              this.chatBotMessageContainer.scrollTop = this.chatBotMessageContainer.scrollHeight;
-              this.userInput.focus();
-            });
-          }, 1000);
-        });
+        this.botProcess();
       });
     }else{
       this.setState({
