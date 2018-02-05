@@ -19,7 +19,9 @@ class MessageList extends Component {
             <Grid.Column className = "UserMessageCol" verticalAlign = 'middle' >
               <Popup trigger = {
                 <Label className = "UserMessage" size = 'large' color = 'blue' pointing = 'right'>
-                  {data.message}
+                  {data.message.split('\n').map((item, key) => {
+                    return <span>{item}<br/></span>
+                  })}
                 </Label>
               }
               content = 'Tôi'
@@ -39,7 +41,9 @@ class MessageList extends Component {
             </Grid.Column>
             <Grid.Column className = "BotMessageCol" width = {14} verticalAlign = 'middle'>
               <Label as = 'span' className = "BotMessage" size = 'large' pointing = 'left'>
-                {data.message}
+                {data.message.split('\n').map((item, key) => {
+                  return <span>{item}<br/></span>
+                })}
               </Label>
             </Grid.Column>
           </Grid.Row>

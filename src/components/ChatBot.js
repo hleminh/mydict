@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import $ from 'jquery';
 import {
   Card,
   Input,
@@ -8,27 +9,77 @@ import MessageList from './MessageList';
 
 const steps = [
   {
-    'id': 0,
+    'id':'-1',
+    'message': 'Xin lỗi, tôi không hiểu ý của bạn. Xin hãy thử lại.',
+    'next': '0',
+  },
+  {
+    'id': '0',
     'message': 'Xin chào! Tôi là SUGE Bot. Tôi có thể giúp bạn việc gì?\n1. Tìm từ Nhật - Việt\n2. Tìm từ Việt - Nhật',
     'options': [
       {
-        'case': 1,
-        'next': 1
+        'case': '1',
+        'next': '0-1i'
       },
       {
-        'case': 2,
-        'next': 2
+        'case': '2',
+        'next': '0-2i'
       }
     ]
   },
   {
-    'id': 1,
+    'id': '0-1i',
     'message': 'Xin hãy nhập từ tiếng Nhật',
+    'next': '0-1p',
   },
   {
-    'id': 2,
+    'id': '0-2i',
     'message': 'Xin hãy nhập từ tiếng Việt',
+    'next': '0-2p',
   },
+  {
+    'id': '0-1p',
+    'action': function(callback, keyword){
+      $.ajax({
+        'url': '/entry/jpn_vie?filter=' + keyword,
+        'type': 'GET',
+        'context': this,
+        success: function(result) {
+          var processedResult = '';
+          console.log(result);
+          for (var eachResult in result){
+            processedResult += `${result[eachResult].origin} ${result[eachResult].kana} ${result[eachResult].definition}\n`;
+          }
+          callback(processedResult);
+        }
+      });
+    },
+    'next': 'result',
+  },
+  {
+    'id': '0-2p',
+    'action': function(callback, keyword){
+      $.ajax({
+        'url': '/entry/vie_jpn?filter=' + keyword,
+        'type': 'GET',
+        'context': this,
+        success: function(result) {
+          var processedResult = '';
+          console.log(result);
+          for (var eachResult in result){
+            processedResult += `${result[eachResult].origin} ${result[eachResult].kana} ${result[eachResult].definition}\n`;
+          }
+          callback(processedResult);
+        }
+      });
+    },
+    'next': 'result',
+  },
+  {
+    'id': 'result',
+    'message': '',
+    'next': '0',
+  }
 ];
 
 class ChatBot extends Component {
@@ -39,39 +90,118 @@ class ChatBot extends Component {
       'userInput': '',
       'dataList': [
         {
-          'message': steps[0].message,
+          'message': steps[1].message,
           'type': 'botMessage',
         },
       ],
       'disableInput' : false,
       'userLoadingExist': false,
-      'currentStep': steps[0],
+      'currentStep': steps[1],
+    }
+  }
+
+  nextStep(currentStep, data){
+    switch(currentStep){
+      case 'options':
+        console.log('options');
+        for (let step in steps){
+          if (data.next === steps[step].id){
+            this.setState({
+                'currentStep': steps[step],
+              }, () => {
+                this.botReply();
+                if (this.state.currentStep.action){
+                  console.log('next step is action');
+                  this.botProcess();
+                }
+              }
+            )
+          }
+        }
+        break;
+      case 'action':
+        console.log('action');
+        for (let step in steps){
+          if (this.state.currentStep.next === steps[step].id){
+            steps[step].message = data;
+            this.setState({
+                'currentStep': steps[step],
+              }, () => {
+                this.botReply();
+                if (this.state.currentStep.action){
+                  console.log('next step is action');
+                  this.botProcess();
+                }
+              }
+            )
+          }
+        }
+        break;
+      case 'message':
+        console.log('message');
+        for (let step in steps){
+          if (this.state.currentStep.next === steps[step].id){
+            this.setState({
+                'currentStep': steps[step],
+              }, () => {
+                if (!this.state.currentStep.action){
+                  this.botReply();
+                }
+                else {
+                  console.log('next step is action');
+                  this.botProcess();
+                }
+              }
+            )
+          }
+        }
+        break;
+      default:
+        console.log('err');
+        for (let step in steps){
+          if ('-1' === steps[step].id){
+            this.setState({
+                'currentStep': steps[step],
+              }, () => {
+                if (!this.state.currentStep.action){
+                  this.botReply();
+                }
+                else {
+                  console.log('next step is action');
+                  this.botProcess();
+                }
+              }
+            )
+          }
+        }
     }
   }
 
   botProcess(){
-    for (var step in steps){
-      if (this.state.currentStep.id === steps[step].id){
-        if (this.state.currentStep.options){
-          for (var option in this.state.currentStep.options){
-            if (parseInt(this.state.userInput) === this.state.currentStep.options[option].case){
-              console.log('User picked option: ' +  this.state.userInput);
-              this.setState({
-                  'currentStep': steps[this.state.currentStep.options[option].next],
-                }, () => {
-                  this.botReply();
-                }
-              )
-            }
-          }
-        } else{
-
+    console.log(this.state.currentStep.id);
+    if (this.state.currentStep.options){
+      console.log('process options');
+      for (let option in this.state.currentStep.options){
+        if (this.state.userInput === this.state.currentStep.options[option].case){
+          console.log('User picked option: ' +  this.state.userInput);
+          this.nextStep('options', this.state.currentStep.options[option]);
+          return;
         }
       }
+      this.nextStep('err');
+    } else if (this.state.currentStep.action){
+      console.log('process action');
+      this.state.currentStep.action((result) => {
+        this.nextStep('action', result);
+      }, this.state.userInput);
+    } else {
+      console.log('process message');
+      this.nextStep('message');
     }
   }
 
   botReply(){
+    console.log('reply ' + this.state.currentStep.id);
     this.setState({
       'dataList': this.state.dataList.concat([
         {
@@ -99,6 +229,9 @@ class ChatBot extends Component {
         }, () => {
           this.chatBotMessageContainer.scrollTop = this.chatBotMessageContainer.scrollHeight;
           this.userInput.focus();
+          if (this.state.currentStep.next === '0'){
+            this.nextStep('message');
+          }
         });
       }, 1000);
     });
