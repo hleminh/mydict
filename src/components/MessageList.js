@@ -8,6 +8,7 @@ import {
 import RobotPNG from '../assets/images/bot2.png';
 import BotLoadingGIF from '../assets/images/dot1.gif';
 import UserLoadingGIF from '../assets/images/dot3.gif';
+import TimeStamp from './TimeStamp';
 
 class MessageList extends Component {
 
@@ -24,7 +25,9 @@ class MessageList extends Component {
                   })}
                 </Label>
               }
-              content = 'Tôi'
+              content = {
+                <TimeStamp by = 'Tôi' />
+              }
               />
             </Grid.Column>
           </Grid.Row>
@@ -36,7 +39,9 @@ class MessageList extends Component {
               <Popup trigger = {
                 <Image inline = {true} verticalAlign = 'middle' src = {RobotPNG} size = 'mini' circular = {true} bordered = {true}/>
               }
-              content = 'SUGE Bot'
+              content = {
+                <TimeStamp by = 'SUGE Bot'/>
+              }
               />
             </Grid.Column>
             <Grid.Column className = "BotMessageCol" width = {14} verticalAlign = 'middle'>
